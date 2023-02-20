@@ -44,8 +44,9 @@ def Scraper():
         pages = soup.body.find_all("a")
 
         for link in pages:
+            a_link = link.attrs["href"]
             if link.attrs["href"] != "/" and not os.path.exists(
-                os.path.abspath("") + link.attrs["href"]
+                os.path.abspath("") + a_link.replace('https://www.classcentral.com', '')
             ):
                 print(f"{pages.index(link)} from {len(pages)}")
                 if re.search("www.classcentral.com", link.attrs["href"]):
@@ -213,8 +214,8 @@ def make_dirs(content):
                 if (
                     len(dir_) > 1
                     and not os.path.exists(temp_dir+dir_)
-                    and not re.search(".com|.net|.jpg|.png|.ico|.gif", dir_)
-                    and not re.search(".com|.net|.jpg|.png|.ico|.gif", temp_dir)
+                    and not re.search(r'^[^:]+://([^.]+\.)+[^/]+/([^/]+/)+[^#]+(#.+)?$', dir_)
+                    and not re.search(r'^[^:]+://([^.]+\.)+[^/]+/([^/]+/)+[^#]+(#.+)?$', temp_dir)
                 ):
                     temp_dir += dir_
                     os.mkdir(temp_dir)
